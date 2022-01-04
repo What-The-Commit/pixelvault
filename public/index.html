@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Information about Pixel Vault assets">
     <title>Pixelvault - Info</title>
-    <link rel="icon" type="image/png" href="pixelvault.png" />
+    <link rel="icon" type="image/png" href="images/pixelvault.png" />
 
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -30,7 +30,7 @@
 
 
     <!-- Custom styles for this template -->
-    <link href="cover.css" rel="stylesheet">
+    <link href="css/cover.css" rel="stylesheet">
 </head>
 
 <body class="d-flex h-100 text-white bg-dark">
@@ -38,7 +38,7 @@
     <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
         <header class="mb-auto">
             <div>
-                <h3 class="float-md-start mb-0"><img src="pixelvault.png" height="35">
+                <h3 class="float-md-start mb-0"><img src="images/pixelvault.png" height="35">
                     <div style="display: inline-block;position: relative;top: 4px;margin-left: 15px;">Pixel Vault</div>
                 </h3>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
@@ -49,9 +49,19 @@
 
         <main class="px-3" style="padding-left: 0 !important;">
             <h1>Floor prices (opensea)</h1>
-            <h2>Updated every 5 minutes <span id="last-updated-floor" style="display: none;">now</span></h2>
-            <p class="lead"></p>
-            <p class="lead"></p>
+            <!--<h2>Updated every 5 minutes <span id="last-updated-floor" style="display: none;">now</span></h2>-->
+            <p class="lead">
+                Metahero: <span id="floor-metahero"></span>
+            </p>
+            <p class="lead">
+                Metahero Core: <span id="floor-metahero-core"></span>
+            </p>
+            <p class="lead">
+                Planets: <span id="floor-planets"></span>
+            </p>
+            <p class="lead">
+                Punks Comic: <span id="floor-punks-comic"></span>
+            </p>
         </main>
 
         <footer class="mt-auto text-white-50">
@@ -62,8 +72,8 @@
         </footer>
     </div>
 
-
-
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>
