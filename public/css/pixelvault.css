@@ -15,3 +15,30 @@
 body {
     font-family: raleway, sans-serif;
 }
+
+.pv-tile {
+    border: 1px solid white;
+    min-height: 50px;
+    padding: 35px;
+}
+
+.tiles {
+    margin: 20px 0;
+}
+
+.pv-table {
+    color: white;
+}
+
+.pv-table tbody td {
+    font-weight: bold;
+}
+
+#fiat-button {
+    background-color: var(--pv-gray); border-color: var(--pv-gray);
+    color: var(--planet-black);
+}
+
+#fiat-button:focus {
+    box-shadow: 0 0 0 0.25rem rgb(188 188 188 / 25%);
+}

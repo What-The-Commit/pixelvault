@@ -103,7 +103,56 @@ window.addEventListener('load', async function () {
         return formattedValue;
     };
 
-    getOpenseaStatsBySlug('metahero-generative').then(function (statsMetahero) {
+    var punksComicOne = getLowestPriceOfAssetByContractAndId(tokenAddressPunksComicOne);
+    var foundersDao = getLowestPriceOfAssetByContractAndId(tokenAddressFoundersDao);
+    var mintpassOne = getLowestPriceOfAssetByContractAndId(tokenAddressMintpass, tokenIdMintpassOne);
+    var metahero = getOpenseaStatsBySlug('metahero-generative');
+
+    var planetMercury = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetMercury);
+    var planetVenus = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetVenus);
+    var planetEarth = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetEarth);
+    var planetMars = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetMars);
+    var planetJupiter = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetJupiter);
+    var planetSaturn = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetSaturn);
+    var planetUranus = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetUranus);
+    var planetNeptune = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, planetNeptune);
+    var planetPluto = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetPluto);
+    var planetMoon = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetMoon);
+    
+
+    var genesisSet = [punksComicOne, foundersDao, mintpassOne, metahero];
+    var planetSet = [planetMercury, planetVenus, planetEarth, planetMars, planetJupiter, planetSaturn, planetUranus, planetNeptune, planetPluto, planetMoon];
+
+    Promise.all(genesisSet).then(function (values) {
+        var setValue = 0.00;
+
+        for (value of values) {
+            if (typeof value === 'object') {
+                setValue += value.stats.floor_price;
+                continue;
+            }
+            
+            setValue += value;
+        }
+
+        var elm = this.document.getElementById('floor-set-genesis');
+
+        elm.innerHTML = formatEth(setValue, true);
+    });
+
+    Promise.all(planetSet).then(function (values) {
+        var setValue = 0.00;
+
+        for (value of values) {
+            setValue += value;
+        }
+
+        var elm = this.document.getElementById('floor-set-planets');
+
+        elm.innerHTML = formatEth(setValue, true);
+    });
+
+    metahero.then(function (statsMetahero) {
         var elm = this.document.getElementById('floor-metahero');
 
         elm.innerHTML = formatEth(statsMetahero.stats.floor_price, true);
@@ -115,13 +164,13 @@ window.addEventListener('load', async function () {
         elm.innerHTML = formatEth(statsMetaheroCore.stats.floor_price, true);
     });
 
-    getLowestPriceOfAssetByContractAndId(tokenAddressMintpass, tokenIdMintpassOne).then(function (lowestPrice) {
+    mintpassOne.then(function (lowestPrice) {
         var elm = this.document.getElementById('floor-metahero-mintpass-one');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
-    getLowestPriceOfAssetByContractAndId(tokenAddressPunksComicOne).then(function (lowestPrice) {
+    punksComicOne.then(function (lowestPrice) {
         var elm = this.document.getElementById('floor-punks-comic-one');
 
         elm.innerHTML = formatEth(lowestPrice, true);
@@ -139,25 +188,25 @@ window.addEventListener('load', async function () {
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
-    getLowestPriceOfAssetByContractAndId(tokenAddressFoundersDao).then(function (lowestPrice) {
+    foundersDao.then(function (lowestPrice) {
         var elm = this.document.getElementById('floor-founders-dao');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
-    getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetMercury).then(function (lowestPrice) {
+    planetMercury.then(function (lowestPrice) {
         var elm = this.document.getElementById('floor-planets-mercury');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
-    getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetVenus).then(function (lowestPrice) {
+    planetVenus.then(function (lowestPrice) {
         var elm = this.document.getElementById('floor-planets-venus');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
-    getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetEarth).then(function (lowestPrice) {
+    planetEarth.then(function (lowestPrice) {
         var elm = this.document.getElementById('floor-planets-earth');
 
         elm.innerHTML = formatEth(lowestPrice, true);
@@ -169,43 +218,43 @@ window.addEventListener('load', async function () {
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
-    getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetMars).then(function (lowestPrice) {
+    planetMars.then(function (lowestPrice) {
         var elm = this.document.getElementById('floor-planets-mars');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
-    getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetJupiter).then(function (lowestPrice) {
+    planetJupiter.then(function (lowestPrice) {
         var elm = this.document.getElementById('floor-planets-jupiter');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
-    getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetSaturn).then(function (lowestPrice) {
+    planetSaturn.then(function (lowestPrice) {
         var elm = this.document.getElementById('floor-planets-saturn');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
-    getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetUranus).then(function (lowestPrice) {
+    planetUranus.then(function (lowestPrice) {
         var elm = this.document.getElementById('floor-planets-uranus');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
-    getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetNeptune).then(function (lowestPrice) {
+    planetNeptune.then(function (lowestPrice) {
         var elm = this.document.getElementById('floor-planets-neptune');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
-    getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetPluto).then(function (lowestPrice) {
+    planetPluto.then(function (lowestPrice) {
         var elm = this.document.getElementById('floor-planets-pluto');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
-    getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetMoon).then(function (lowestPrice) {
+    planetMoon.then(function (lowestPrice) {
         var elm = this.document.getElementById('floor-planets-moon');
 
         elm.innerHTML = formatEth(lowestPrice, true);

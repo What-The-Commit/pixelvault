@@ -61,44 +61,315 @@
             </div>
         </header>
 
-        <main class="px-3" style="padding-left: 0 !important;">
-            <h1>Floor prices (opensea)</h1>
-            <button onclick="toggleFiat(this)">Show FIAT prices</button>
-            <!--<h2>Updated every 5 minutes <span id="last-updated-floor" style="display: none;">now</span></h2>-->
-            <h2>Metahero</h2>
-            <p class="lead">
-                Metahero: <span id="floor-metahero"></span>
+        <main>
+            <div class="row tiles">
+                <div class="col pv-tile text-center">
+                    <p>
+                        <b>$POW Price</b><br />
+                        <b style="color: var(--pv-green);">$1.25</b>
+                    </p>
+                    <p>
+                        <a href="#" class="link-light"><b>Dextools</b></a>
+                    </p>
+                    <p>
+                        <a href="#" class="link-light"><b>Add to Metamask</b></a>
+                    </p>
+                </div>
+                <div class="col pv-tile text-center">
+                    <p>
+                        <b>$PUNKS Price</b><br />
+                        <b style="color: var(--pv-pink);">$5.69</b>
+                    </p>
+                    <p>
+                        <a href="#" class="link-light"><b>Dextools</b></a>
+                    </p>
+                    <p>
+                        <a href="#" class="link-light"><b>Add to Metamask</b></a>
+                    </p>
+                </div>
+            </div>
+            <h2 class="text-center"><b>Floor Prices (OpenSea)</b></h2>
+            <p class="text-center" style="color: var(--pv-pink);">
+                <!--Updated every 5 minutes <span id="last-updated-floor">(last updated: <span id="last-updated-floor-value"></span>)</span><br><br>-->
+                <button type="button" class="btn btn-primary" id="fiat-button" onclick="toggleFiat(this)">Show FIAT prices</button>
             </p>
-            <p class="lead">
-                Metahero Core: <span id="floor-metahero-core"></span>
+            <div class="row tiles">
+                <div class="col pv-tile text-center">
+                    <h3>PUNKS Comic</h3>
+                    <table class="table table-borderless pv-table">
+                        <thead style="color: var(--pv-green);">
+                            <th></th>
+                            <th>Floor price</th>
+                            <th>Supply</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td width="100">
+                                    Punks Comic #1
+                                </td>
+                                <td>
+                                    <span id="floor-punks-comic-one"></span>
+                                </td>
+                                <td>
+                                    3313
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Punks Comic #1 Special Edition
+                                </td>
+                                <td>
+                                    <span id="floor-punks-comic-one-special"></span>
+                                </td>
+                                <td>
+                                    58
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Punks Comic #2
+                                </td>
+                                <td>
+                                    <span id="floor-punks-comic-two"></span>
+                                </td>
+                                <td>
+                                    13566
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Founders Dao
+                                </td>
+                                <td>
+                                    <span id="floor-founders-dao"></span>
+                                </td>
+                                <td>
+                                    5902
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Mintpass #1: Metahero Identities
+                                </td>
+                                <td>
+                                    <span id="floor-metahero-mintpass-one"></span>
+                                </td>
+                                <td>
+                                    <span id="supply-mintpass-one">3592</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col pv-tile text-center">
+                    <h3>MetaHero Universe: Planet Tokens</h3>
+                    <table class="table table-borderless pv-table">
+                        <thead style="color: var(--pv-green);">
+                            <th></th>
+                            <th>Floor price</th>
+                            <th>Supply</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    Mercury
+                                </td>
+                                <td>
+                                    <span id="floor-planets-mercury"></span>
+                                </td>
+                                <td>
+                                    <span id="supply-planet-mercury">832</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Venus
+                                </td>
+                                <td>
+                                    <span id="floor-planets-venus"></span>
+                                </td>
+                                <td>
+                                    <span id="supply-planet-venus">1438</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Earth
+                                </td>
+                                <td>
+                                    <span id="floor-planets-earth"></span>
+                                </td>
+                                <td>
+                                    <span id="supply-planet-earth">1567</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Dark Moon
+                                </td>
+                                <td>
+                                    <span id="floor-planets-dark-moon"></span>
+                                </td>
+                                <td>
+                                    <span id="supply-planet-dark-moon">1567</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Mars
+                                </td>
+                                <td>
+                                    <span id="floor-planets-mars"></span>
+                                </td>
+                                <td>
+                                    <span id="supply-planet-mars">1271</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Jupiter
+                                </td>
+                                <td>
+                                    <span id="floor-planets-jupiter"></span>
+                                </td>
+                                <td>
+                                    <span id="supply-planet-jupiter">22602</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Saturn
+                                </td>
+                                <td>
+                                    <span id="floor-planets-saturn"></span>
+                                </td>
+                                <td>
+                                    <span id="supply-planet-saturn">4099</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Uranus
+                                </td>
+                                <td>
+                                    <span id="floor-planets-uranus"></span>
+                                </td>
+                                <td>
+                                    <span id="supply-planet-uranus">6122</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Neptune
+                                </td>
+                                <td>
+                                    <span id="floor-planets-neptune"></span>
+                                </td>
+                                <td>
+                                    <span id="supply-planet-neptune">6058</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Pluto
+                                </td>
+                                <td>
+                                    <span id="floor-planets-pluto"></span>
+                                </td>
+                                <td>
+                                    <span id="supply-planet-pluto">455</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Moon
+                                </td>
+                                <td>
+                                    <span id="floor-planets-moon"></span>
+                                </td>
+                                <td>
+                                    <span id="supply-planet-moon">710</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <h2 class="text-center"><b>Sets Floor Prices (OpenSea)</b></h2>
+            <div class="row tiles">
+                <div class="col pv-tile text-center">
+                    <p>
+                        <b style="color: var(--pv-pink);">Genesis Set</b><br />
+                        <b style="color: var(--pv-green);">PUNKS: Issue #1 + Pixel Vault Founder's DAO + MintPass #1 + MetaHero</b>
+                    </p>
+                    <p>
+                        <b><span id="floor-set-genesis"></span></b>
+                    </p>
+                </div>
+                <div class="col pv-tile text-center">
+                    <p>
+                        <b style="color: var(--pv-pink);">Planet Set</b><br />
+                        <b style="color: var(--pv-green);">All 10 planets (except Dark Moon)</b>
+                    </p>
+                    <p>
+                        <b><span id="floor-set-planets"></span></b>
+                    </p>
+                </div>
+            </div>
+
+            <h2 class="text-center"><b>MetaHero Universe Floor Prices (OpenSea)</b></h2>
+            <p class="text-center" style="color: var(--pv-pink);">
+                <!--Updated every 5 minutes <span id="last-updated-floor">(last updated: <span id="last-updated-floor-value"></span>)</span><br><br>-->
             </p>
-            <p class="lead">
-                Mintpass #1: <span id="floor-metahero-mintpass-one"></span>
-            </p>
-            <h2>Planets</h2>
-            <p class="lead">
-                Planet Mercury: <span id="floor-planets-mercury"></span><br />
-                Planet Venus: <span id="floor-planets-venus"></span><br />
-                Planet Earth: <span id="floor-planets-earth"></span><br />
-                Planet Dark Moon: <span id="floor-planets-dark-moon"></span><br />
-                Planet Mars: <span id="floor-planets-mars"></span><br />
-                Planet Jupiter: <span id="floor-planets-jupiter"></span><br />
-                Planet Saturn: <span id="floor-planets-saturn"></span><br />
-                Planet Uranus: <span id="floor-planets-uranus"></span><br />
-                Planet Neptune: <span id="floor-planets-neptune"></span><br />
-                Planet Pluto: <span id="floor-planets-pluto"></span><br />
-                Planet Moon: <span id="floor-planets-moon"></span><br />
-            </p>
-            <h2>Punks Comic</h2>
-            <p class="lead">
-                Punks Comic #1: <span id="floor-punks-comic-one"></span><br />
-                Punks Comic #1 Special Edition: <span id="floor-punks-comic-one-special"></span><br />
-                Punks Comic #2: <span id="floor-punks-comic-two"></span><br />
-            </p>
-            <h2>Pixel Vault</h2>
-            <p class="lead">
-                Founders DAO: <span id="floor-founders-dao"></span><br />
-            </p>
+           
+            <div class="row tiles">
+                <div class="col pv-tile text-center">
+                    <h3 style="color: var(--pv-pink);">Core Identities</h3>
+                    <table class="table table-borderless pv-table">
+                        <thead style="color: var(--pv-green);">
+                            <th></th>
+                            <th>Floor price</th>
+                            <th>Supply</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td width="100">
+                                    Overall
+                                </td>
+                                <td>
+                                    <span id="floor-metahero-core"></span>
+                                </td>
+                                <td>
+                                    <span id="supply-metahero-core">48</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col pv-tile text-center">
+                    <h3 style="color: var(--pv-pink);">Generative Identities</h3>
+                    <table class="table table-borderless pv-table">
+                        <thead style="color: var(--pv-green);">
+                            <th></th>
+                            <th>Floor price</th>
+                            <th>Supply</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    Overall
+                                </td>
+                                <td>
+                                    <span id="floor-metahero"></span>
+                                </td>
+                                <td>
+                                    <span id="supply-metahero">6086</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </main>
 
         <footer class="mt-auto text-white-50">
