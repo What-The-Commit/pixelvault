@@ -1,0 +1,17 @@
+:root {
+    --pv-pink: #d93978;
+    --pv-green: #14c918;
+    --pv-darken: #00000080;
+    --pv-lightblue: #111930;
+    --pv-paleblue: #253151;
+    --pv-midblue: #18223E;
+    --pv-blue: #101A32;
+    --pv-gray: #BCBCBC;
+    --planet-black: #0C1121;
+    --pv-red: #DC5263;
+    --stake-gray: #253151;
+}
+
+body {
+    font-family: raleway, sans-serif;
+}

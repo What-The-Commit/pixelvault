@@ -29,18 +29,18 @@ window.addEventListener('load', async function () {
     ethPriceInEur = ethPrices.EUR;
 
     getOpenseaStatsBySlug('planetdaos').then(function (statsPlanets) {
-        this.document.getElementById('floor-planets').innerText = statsPlanets.stats.floor_price + ' Ξ (USD: ' + (statsPlanets.stats.floor_price * ethPriceInUsd).toLocaleString() + ' / EUR: ' + (statsPlanets.stats.floor_price * ethPriceInEur).toLocaleString() + ')';
+        this.document.getElementById('floor-planets').innerText = statsPlanets.stats.floor_price.toFixed(2) + ' Ξ (USD: ' + (statsPlanets.stats.floor_price * ethPriceInUsd).toFixed(2).toLocaleString() + ' / EUR: ' + (statsPlanets.stats.floor_price * ethPriceInEur).toFixed(2).toLocaleString() + ')';
     });
 
     getOpenseaStatsBySlug('metahero-generative').then(function (statsMetahero) {
-        this.document.getElementById('floor-metahero').innerText = statsMetahero.stats.floor_price + ' Ξ (USD: ' + (statsMetahero.stats.floor_price * ethPriceInUsd).toLocaleString() + ' / EUR: ' + (statsMetahero.stats.floor_price * ethPriceInEur).toLocaleString() + ')';
+        this.document.getElementById('floor-metahero').innerText = statsMetahero.stats.floor_price.toFixed(2) + ' Ξ (USD: ' + (statsMetahero.stats.floor_price * ethPriceInUsd).toFixed(2).toLocaleString() + ' / EUR: ' + (statsMetahero.stats.floor_price * ethPriceInEur).toFixed(2).toLocaleString() + ')';
     });
 
     getOpenseaStatsBySlug('metaherouniverse').then(function (statsMetaheroCore) {
-        this.document.getElementById('floor-metahero-core').innerText = statsMetaheroCore.stats.floor_price + ' Ξ (USD: ' + (statsMetaheroCore.stats.floor_price * ethPriceInUsd).toLocaleString() + ' / EUR: ' + (statsMetaheroCore.stats.floor_price * ethPriceInEur).toLocaleString() + ')';
+        this.document.getElementById('floor-metahero-core').innerText = statsMetaheroCore.stats.floor_price.toFixed(2) + ' Ξ (USD: ' + (statsMetaheroCore.stats.floor_price * ethPriceInUsd).toFixed(2).toLocaleString() + ' / EUR: ' + (statsMetaheroCore.stats.floor_price * ethPriceInEur).toFixed(2).toLocaleString() + ')';
     });
 
     getOpenseaStatsBySlug('punks-comic').then(function (statsPunksComic) {
-        this.document.getElementById('floor-punks-comic').innerText = statsPunksComic.stats.floor_price + ' Ξ (USD: ' + (statsPunksComic.stats.floor_price * ethPriceInUsd).toLocaleString() + ' / EUR: ' + (statsPunksComic.stats.floor_price * ethPriceInEur).toLocaleString() + ')';
+        this.document.getElementById('floor-punks-comic').innerText = statsPunksComic.stats.floor_price.toFixed(2) + ' Ξ (USD: ' + (statsPunksComic.stats.floor_price * ethPriceInUsd).toFixed(2).toLocaleString() + ' / EUR: ' + (statsPunksComic.stats.floor_price * ethPriceInEur).toFixed(2).toLocaleString() + ')';
     });
 })
