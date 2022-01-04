@@ -84,7 +84,14 @@ const tokenAddressPunksComicOne = '0x5ab21ec0bfa0b29545230395e3adaca7d552c948';
 const tokenAddressPunksComicOneSpecial = '0xa9c0a07a7cb84ad1f2ffab06de3e55aab7d523e8';
 const tokenAddressPunksComicTwo = '0x128675d4fddbc4a0d3f8aa777d8ee0fb8b427c2f';
 
+const firstPowUnlock = 1641352693;
+const firstPunksUnlock = 1641352686;
+const currentTimestamp = Math.floor(new Date().getTime() / 1000);
+
 window.addEventListener('load', async function () {
+    this.document.getElementById('pow-unlock').innerHTML = 'Time to the first $POW unlock: <b>' + ((firstPowUnlock - currentTimestamp) / 60).toFixed(0) + '</b>min';
+    this.document.getElementById('punks-unlock').innerHTML = 'Time to the first $PUNKS unlock: <b>' + ((firstPunksUnlock - currentTimestamp) / 60).toFixed(0) + '<b/>min';
+
     ethPrices = await getEthPriceInOtherCurrencies();
     ethPriceInUsd = ethPrices.USD;
     ethPriceInEur = ethPrices.EUR;
