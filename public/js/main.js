@@ -44,6 +44,38 @@ async function getLowestPriceOfAssetByContractAndId(contract, id = null) {
     return parseFloat(ethers.utils.formatEther(data.assets[0].last_sale.total_price));
 }
 
+async function fetchPriceInWeth(pool) {
+    let response = await fetch("https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3", {
+        "body": "{\"query\":\"\\n  {\\n    pool(id: \\\"" + pool + "\\\") {\\n      token1Price\\n    }\\n  }\\n\"}",
+        "method": "POST",
+        "mode": "cors",
+        "credentials": "omit"
+    });
+
+    let data = await response.json();
+
+    return data.data.pool.token1Price;
+}
+
+async function addTokenToMetamask(address, symbol, decimals = 18) {
+    try {
+        // wasAdded is a boolean. Like any RPC method, an error may be thrown.
+        const wasAdded = await ethereum.request({
+            method: 'wallet_watchAsset',
+            params: {
+                type: 'ERC20', // Initially only supports ERC20, but eventually more!
+                options: {
+                    address: address, // The address that the token is at.
+                    symbol: symbol, // A ticker symbol or shorthand, up to 5 chars.
+                    decimals: decimals, // The number of decimals in the token
+                },
+            },
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 function toggleFiat(button) {
     if (button.innerHTML === "Show FIAT prices") {
         button.innerHTML = 'Hide FIAT prices';
@@ -84,14 +116,10 @@ const tokenAddressPunksComicOne = '0x5ab21ec0bfa0b29545230395e3adaca7d552c948';
 const tokenAddressPunksComicOneSpecial = '0xa9c0a07a7cb84ad1f2ffab06de3e55aab7d523e8';
 const tokenAddressPunksComicTwo = '0x128675d4fddbc4a0d3f8aa777d8ee0fb8b427c2f';
 
-const firstPowUnlock = 1641352693;
-const firstPunksUnlock = 1641352686;
-const currentTimestamp = Math.floor(new Date().getTime() / 1000);
+const powAddress = '0xc0793782d11dd9bf7b3a7a5a74614f1debe1da2e';
+const punksAddress = '0xa80ccc104349d2ee29998c54d6e6488012f8afe0';
 
 window.addEventListener('load', async function () {
-    this.document.getElementById('pow-unlock').innerHTML = 'Time to the first $POW unlock: <b>' + ((firstPowUnlock - currentTimestamp) / 60).toFixed(0) + '</b>min';
-    this.document.getElementById('punks-unlock').innerHTML = 'Time to the first $PUNKS unlock: <b>' + ((firstPunksUnlock - currentTimestamp) / 60).toFixed(0) + '<b/>min';
-
     ethPrices = await getEthPriceInOtherCurrencies();
     ethPriceInUsd = ethPrices.USD;
     ethPriceInEur = ethPrices.EUR;
@@ -110,6 +138,17 @@ window.addEventListener('load', async function () {
         return formattedValue;
     };
 
+    fetchPriceInWeth(powAddress).then(function (powPriceInWeth) {
+        var elm = this.document.getElementById('token-price-pow');
+        elm.innerHTML = '$' + (powPriceInWeth * ethPriceInUsd).toFixed(2).toLocaleString();
+    });
+
+
+    fetchPriceInWeth(punksAddress).then(function (punksPriceInWeth) {
+        var elm = this.document.getElementById('token-price-punks');
+        elm.innerHTML = '$' + (punksPriceInWeth * ethPriceInUsd).toFixed(2).toLocaleString();
+    });
+
     var punksComicOne = getLowestPriceOfAssetByContractAndId(tokenAddressPunksComicOne);
     var foundersDao = getLowestPriceOfAssetByContractAndId(tokenAddressFoundersDao);
     var mintpassOne = getLowestPriceOfAssetByContractAndId(tokenAddressMintpass, tokenIdMintpassOne);
@@ -125,7 +164,7 @@ window.addEventListener('load', async function () {
     var planetNeptune = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, planetNeptune);
     var planetPluto = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetPluto);
     var planetMoon = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetMoon);
-    
+
 
     var genesisSet = [punksComicOne, foundersDao, mintpassOne, metahero];
     var planetSet = [planetMercury, planetVenus, planetEarth, planetMars, planetJupiter, planetSaturn, planetUranus, planetNeptune, planetPluto, planetMoon];
@@ -138,7 +177,7 @@ window.addEventListener('load', async function () {
                 setValue += value.stats.floor_price;
                 continue;
             }
-            
+
             setValue += value;
         }
 
