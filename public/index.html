@@ -53,7 +53,7 @@
         <header class="mb-auto">
             <div>
                 <h3 class="float-md-start mb-0"><img src="images/pixelvault.png" height="35">
-                    <div style="display: inline-block;position: relative;top: 4px;margin-left: 15px;">Pixel Vault</div>
+                    <div style="display: inline-block;position: relative;top: 4px;margin-left: 15px;color: var(--pv-pink);">Pixel Vault</div>
                 </h3>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
                     <a class="nav-link active" aria-current="page" href="#">Home</a>
@@ -91,12 +91,11 @@
             <h2 class="text-center"><b>Floor Prices (OpenSea)</b></h2>
             <p class="text-center" style="color: var(--pv-pink);">
                 Updated every 5 minutes <span class="last-updated-floor">(last updated: <span class="last-updated-floor-value"></span>)</span><br><br>
-                <button type="button" class="btn btn-primary" id="fiat-button" onclick="toggleFiat(this)">Show FIAT prices</button>
             </p>
             <div class="row tiles">
                 <div class="col pv-tile text-center">
-                    <h3>PUNKS Comic</h3>
-                    <table class="table table-borderless pv-table">
+                    <h3 style="color: var(--pv-pink);">PUNKS Comic</h3>
+                    <table class="table table-borderless pv-table" style="border-spacing: 28px;border-collapse: separate;">
                         <thead style="color: var(--pv-green);">
                             <th></th>
                             <th>Floor price</th>
@@ -104,10 +103,10 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td width="100">
+                                <td>
                                     Punks Comic #1
                                 </td>
-                                <td>
+                                <td width="100">
                                     <span id="floor-punks-comic-one"></span>
                                 </td>
                                 <td>
@@ -162,7 +161,7 @@
                     </table>
                 </div>
                 <div class="col pv-tile text-center">
-                    <h3>MetaHero Universe: Planet Tokens</h3>
+                    <h3 style="color: var(--pv-pink);">MetaHero Universe: Planet Tokens</h3>
                     <table class="table table-borderless pv-table">
                         <thead style="color: var(--pv-green);">
                             <th></th>
@@ -302,7 +301,7 @@
             <div class="row tiles">
                 <div class="col pv-tile text-center">
                     <p>
-                        <b style="color: var(--pv-pink);">Genesis Set</b><br />
+                        <h3 style="color: var(--pv-pink);">Genesis Set</h3>
                         <b style="color: var(--pv-green);">PUNKS: Issue #1 + Pixel Vault Founder's DAO + MintPass #1 + MetaHero</b>
                     </p>
                     <p>
@@ -311,7 +310,7 @@
                 </div>
                 <div class="col pv-tile text-center">
                     <p>
-                        <b style="color: var(--pv-pink);">Planet Set</b><br />
+                        <h3 style="color: var(--pv-pink);">Planet Set</h3>
                         <b style="color: var(--pv-green);">All 10 planets (except Dark Moon)</b>
                     </p>
                     <p>
@@ -389,14 +388,14 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td width="200">
-                                    adidas Originals:<br />Into the Metaverse (Phase 1)
+                                <td width="365">
+                                    adidas Originals: Into the Metaverse (Phase 1)
                                 </td>
                                 <td>
                                     <span id="floor-collab-adidas"></span>
                                 </td>
                                 <td>
-                                    <span id="supply-collab-adidas">48</span>
+                                    <span id="supply-collab-adidas">30000</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -407,10 +406,13 @@
         </main>
 
         <footer class="mt-auto text-white-50">
-            <p>Made with ♥ by <a href="https://what-the-commit.com/" class="text-white">What The Commit</a> (<a
+            <p style="float: left;">Made with ♥ by <a href="https://what-the-commit.com/" class="text-white">What The Commit</a> (<a
                     href="https://twitter.com/bavragor94" class="text-white">tony-stark.eth</a>) for the <a
                     href="https://punkscomic.com/" target="_blank" class="text-white">Pixel Vault</a> community
+                    
             </p>
+            <a href="#" id="fiat-button" onclick="toggleFiat(this)" style="float: right;">Show FIAT prices</a>
+            <div class="clear"></div>
         </footer>
     </div>
 

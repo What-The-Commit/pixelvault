@@ -16,14 +16,23 @@ body {
     font-family: raleway, sans-serif;
 }
 
+.clear {
+    clear: both;
+}
+
 .pv-tile {
-    border: 1px solid white;
     min-height: 50px;
     padding: 35px;
 }
 
+.pv-tile:first-child {
+    border-right: 1px solid white;
+}
+
 .tiles {
+    border: 1px solid white;
     margin: 20px 0;
+    border-radius: 15px;
 }
 
 .pv-table {
@@ -35,10 +44,9 @@ body {
 }
 
 #fiat-button {
-    background-color: var(--pv-gray); border-color: var(--pv-gray);
-    color: var(--planet-black);
+    color: var(--pv-pink);
 }
 
-#fiat-button:focus {
-    box-shadow: 0 0 0 0.25rem rgb(188 188 188 / 25%);
+main h2 {
+    margin-top: 30px;
 }
