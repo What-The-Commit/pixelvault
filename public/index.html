@@ -90,7 +90,7 @@
             </div>
             <h2 class="text-center"><b>Floor Prices (OpenSea)</b></h2>
             <p class="text-center" style="color: var(--pv-pink);">
-                <!--Updated every 5 minutes <span id="last-updated-floor">(last updated: <span id="last-updated-floor-value"></span>)</span><br><br>-->
+                Updated every 5 minutes <span class="last-updated-floor">(last updated: <span class="last-updated-floor-value"></span>)</span><br><br>
                 <button type="button" class="btn btn-primary" id="fiat-button" onclick="toggleFiat(this)">Show FIAT prices</button>
             </p>
             <div class="row tiles">
@@ -296,6 +296,9 @@
                 </div>
             </div>
             <h2 class="text-center"><b>Sets Floor Prices (OpenSea)</b></h2>
+            <p class="text-center" style="color: var(--pv-pink);">
+                Updated every 5 minutes <span class="last-updated-floor">(last updated: <span class="last-updated-floor-value"></span>)</span>
+            </p>
             <div class="row tiles">
                 <div class="col pv-tile text-center">
                     <p>
@@ -319,7 +322,7 @@
 
             <h2 class="text-center"><b>MetaHero Universe Floor Prices (OpenSea)</b></h2>
             <p class="text-center" style="color: var(--pv-pink);">
-                <!--Updated every 5 minutes <span id="last-updated-floor">(last updated: <span id="last-updated-floor-value"></span>)</span><br><br>-->
+                Updated every 5 minutes <span class="last-updated-floor">(last updated: <span class="last-updated-floor-value"></span>)</span>
             </p>
            
             <div class="row tiles">
@@ -369,6 +372,37 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+            <h2 class="text-center"><b>Collab Project Floor Prices (OpenSea)</b></h2>      
+            <p class="text-center" style="color: var(--pv-pink);">
+                Updated every 5 minutes <span class="last-updated-floor">(last updated: <span class="last-updated-floor-value"></span>)</span>
+            </p>
+
+            <div class="row tiles">
+                <div class="col pv-tile text-center">
+                    <h3 style="color: var(--pv-pink);">Collab Floor Prices</h3>
+                    <table class="table table-borderless pv-table">
+                        <thead style="color: var(--pv-green);">
+                            <th></th>
+                            <th>Floor price</th>
+                            <th>Supply</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td width="200">
+                                    adidas Originals:<br />Into the Metaverse (Phase 1)
+                                </td>
+                                <td>
+                                    <span id="floor-collab-adidas"></span>
+                                </td>
+                                <td>
+                                    <span id="supply-collab-adidas">48</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        
             </div>
         </main>
 

@@ -60,7 +60,7 @@ async function fetchPriceInWeth(pool) {
 async function addTokenToMetamask(address, symbol, decimals = 18) {
     try {
         // wasAdded is a boolean. Like any RPC method, an error may be thrown.
-        const wasAdded = await ethereum.request({
+        await ethereum.request({
             method: 'wallet_watchAsset',
             params: {
                 type: 'ERC20', // Initially only supports ERC20, but eventually more!
@@ -119,7 +119,155 @@ const tokenAddressPunksComicTwo = '0x128675d4fddbc4a0d3f8aa777d8ee0fb8b427c2f';
 const powAddress = '0xc0793782d11dd9bf7b3a7a5a74614f1debe1da2e';
 const punksAddress = '0xa80ccc104349d2ee29998c54d6e6488012f8afe0';
 
+const tokenAddressCollabAdidas = '0x28472a58a490c5e09a238847f66a68a47cc76f0f';
+const tokenIdCollabAdidas = 0;
+
+const tokenAddressMetahero = '0x6dc6001535e15b9def7b0f6a20a2111dfa9454e2';
+const tokenAddressMetaheroCore = '0xfb10b1717c92e9cc2d634080c3c337808408d9e1';
+
+const erc1155Abi = [
+    "function totalSupply(uint256 id) public view returns (uint256)",
+    "function balanceOf(address account, uint256 id) external view returns (uint256)",
+    "function balanceOfBatch(address[] calldata accounts, uint256[] calldata ids) external view returns (uint256[] memory)",
+];
+
+const erc721Abi = [
+    "function totalSupply() external view returns (uint256)",
+    "function balanceOf(address owner) external view returns (uint256 balance)",
+    "function ownerOf(uint256 tokenId) external view returns (address owner)"
+];
+
+const ethersProvider = new ethers.providers.JsonRpcProvider('https://speedy-nodes-nyc.moralis.io/4bdc28473b549df902238ed0/eth/mainnet');
+
 window.addEventListener('load', async function () {
+    refreshPrices();
+    refreshTotalSupplies();
+    updateLastUpdatedFields();
+
+    setInterval(function () {
+        refreshPrices();
+        refreshTotalSupplies();
+        updateLastUpdatedFields();
+    }, 60*5*1000);
+})
+
+async function getTotalSupplyByContractAddressAndType(contractAddress, type, tokenId = null) {
+    let abi = type === 'ERC721' ? erc721Abi : erc1155Abi;
+    let contract = new ethers.Contract(contractAddress, abi, ethersProvider);
+    let totalSupply = ethers.BigNumber.from("0");
+
+    try {
+        totalSupply = type === 'ERC721' ? await contract.totalSupply() : await contract.totalSupply(tokenId);
+    } catch (e) {
+        console.error(e);
+        return totalSupply;
+    }
+
+    return totalSupply;
+}
+
+async function updateLastUpdatedFields() {
+    var lastUpdated = new Date().toLocaleString(navigator.language);
+    var updatedFields = this.document.getElementsByClassName('last-updated-floor-value');
+
+    for (updatedField of updatedFields) {
+        updatedField.innerHTML = '<b>' + lastUpdated + '</b>';
+    }
+}
+
+async function refreshTotalSupplies() {
+    getTotalSupplyByContractAddressAndType(tokenAddressMintpass, 'ERC1155', tokenIdMintpassOne).then(function (totalSupply) {
+        var elm = this.document.getElementById('supply-mintpass-one');
+
+        elm.innerHTML = totalSupply.toString();
+    });
+
+    getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetMercury).then(function (totalSupply) {
+        var elm = this.document.getElementById('supply-planet-mercury');
+
+        elm.innerHTML = totalSupply.toString();
+    });
+
+    getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetVenus).then(function (totalSupply) {
+        var elm = this.document.getElementById('supply-planet-venus');
+
+        elm.innerHTML = totalSupply.toString();
+    });
+
+    getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetEarth).then(function (totalSupply) {
+        var elm = this.document.getElementById('supply-planet-earth');
+
+        elm.innerHTML = totalSupply.toString();
+    });
+
+    getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetDarkMoon).then(function (totalSupply) {
+        var elm = this.document.getElementById('supply-planet-dark-moon');
+
+        elm.innerHTML = totalSupply.toString();
+    });
+
+    getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetMars).then(function (totalSupply) {
+        var elm = this.document.getElementById('supply-planet-mars');
+
+        elm.innerHTML = totalSupply.toString();
+    });
+
+    getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetJupiter).then(function (totalSupply) {
+        var elm = this.document.getElementById('supply-planet-jupiter');
+
+        elm.innerHTML = totalSupply.toString();
+    });
+
+    getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetSaturn).then(function (totalSupply) {
+        var elm = this.document.getElementById('supply-planet-saturn');
+
+        elm.innerHTML = totalSupply.toString();
+    });
+
+    getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetUranus).then(function (totalSupply) {
+        var elm = this.document.getElementById('supply-planet-uranus');
+
+        elm.innerHTML = totalSupply.toString();
+    });
+
+    getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetNeptune).then(function (totalSupply) {
+        var elm = this.document.getElementById('supply-planet-neptune');
+
+        elm.innerHTML = totalSupply.toString();
+    });
+
+    getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetPluto).then(function (totalSupply) {
+        var elm = this.document.getElementById('supply-planet-pluto');
+
+        elm.innerHTML = totalSupply.toString();
+    });
+
+    getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetMoon).then(function (totalSupply) {
+        var elm = this.document.getElementById('supply-planet-moon');
+
+        elm.innerHTML = totalSupply.toString();
+    });
+
+    getTotalSupplyByContractAddressAndType(tokenAddressMetahero, 'ERC721').then(function (totalSupply) {
+        var elm = this.document.getElementById('supply-metahero');
+
+        elm.innerHTML = totalSupply.toString();
+    });
+
+    getTotalSupplyByContractAddressAndType(tokenAddressMetaheroCore, 'ERC721').then(function (totalSupply) {
+        var elm = this.document.getElementById('supply-metahero-core');
+
+        elm.innerHTML = totalSupply.toString();
+    });
+
+    getTotalSupplyByContractAddressAndType(tokenAddressCollabAdidas, 'ERC1155', tokenIdCollabAdidas).then(function (totalSupply) {
+        var elm = this.document.getElementById('supply-collab-adidas');
+
+        elm.innerHTML = totalSupply.toString();
+    });
+}
+
+async function refreshPrices() {
     ethPrices = await getEthPriceInOtherCurrencies();
     ethPriceInUsd = ethPrices.USD;
     ethPriceInEur = ethPrices.EUR;
@@ -161,10 +309,11 @@ window.addEventListener('load', async function () {
     var planetJupiter = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetJupiter);
     var planetSaturn = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetSaturn);
     var planetUranus = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetUranus);
-    var planetNeptune = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, planetNeptune);
+    var planetNeptune = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetNeptune);
     var planetPluto = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetPluto);
     var planetMoon = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetMoon);
 
+    var collabAdidas = getLowestPriceOfAssetByContractAndId(tokenAddressCollabAdidas, tokenIdCollabAdidas);
 
     var genesisSet = [punksComicOne, foundersDao, mintpassOne, metahero];
     var planetSet = [planetMercury, planetVenus, planetEarth, planetMars, planetJupiter, planetSaturn, planetUranus, planetNeptune, planetPluto, planetMoon];
@@ -305,4 +454,10 @@ window.addEventListener('load', async function () {
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
-})
+
+    collabAdidas.then(function (lowestPrice) {
+        var elm = this.document.getElementById('floor-collab-adidas');
+
+        elm.innerHTML = formatEth(lowestPrice, true);
+    });
+}
