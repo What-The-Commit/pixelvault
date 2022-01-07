@@ -1,12 +1,3 @@
-async function getOpenseaStatsBySlug(slug) {
-    const options = { method: 'GET', headers: { Accept: 'application/json' } };
-
-    let response = await fetch('https://api.opensea.io/api/v1/collection/' + slug + '/stats', options);
-    let data = await response.json();
-
-    return data;
-}
-
 async function getEthPriceInOtherCurrencies(currency = 'USD,EUR') {
     let response = await fetch("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=" + currency + "", {
         "headers": {
@@ -21,27 +12,6 @@ async function getEthPriceInOtherCurrencies(currency = 'USD,EUR') {
     let data = await response.json();
 
     return data;
-}
-
-async function getLowestPriceOfAssetByContractAndId(contract, id = null) {
-    const options = { method: 'GET' };
-
-    let params = new URLSearchParams({
-        asset_contract_address: contract,
-        order_by: 'sale_date',
-        order_direction: 'desc',
-        offset: 0,
-        limit: 1
-    });
-
-    if (id !== null) {
-        params.append('token_ids', id);
-    }
-
-    let response = await fetch('https://api.opensea.io/api/v1/assets?' + params.toString(), options);
-    let data = await response.json();
-
-    return parseFloat(ethers.utils.formatEther(data.assets[0].last_sale.total_price)) / parseInt(data.assets[0].last_sale.quantity);
 }
 
 async function fetchPriceInWeth(pool) {
@@ -138,6 +108,7 @@ const erc721Abi = [
 ];
 
 const ethersProvider = new ethers.providers.JsonRpcProvider('https://speedy-nodes-nyc.moralis.io/4bdc28473b549df902238ed0/eth/mainnet');
+const openseaApi = new OpenseaApi(ethers.utils);
 
 window.addEventListener('load', async function () {
     refreshPrices();
@@ -297,23 +268,23 @@ async function refreshPrices() {
         elm.innerHTML = '$' + (punksPriceInWeth * ethPriceInUsd).toFixed(2).toLocaleString();
     });
 
-    var punksComicOne = getLowestPriceOfAssetByContractAndId(tokenAddressPunksComicOne);
-    var foundersDao = getLowestPriceOfAssetByContractAndId(tokenAddressFoundersDao);
-    var mintpassOne = getLowestPriceOfAssetByContractAndId(tokenAddressMintpass, tokenIdMintpassOne);
-    var metahero = getOpenseaStatsBySlug('metahero-generative');
+    var punksComicOne = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPunksComicOne);
+    var foundersDao = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressFoundersDao);
+    var mintpassOne = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressMintpass, tokenIdMintpassOne);
+    var metahero = openseaApi.getFloorPriceForCollectionBySlug('metahero-generative');
 
-    var planetMercury = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetMercury);
-    var planetVenus = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetVenus);
-    var planetEarth = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetEarth);
-    var planetMars = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetMars);
-    var planetJupiter = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetJupiter);
-    var planetSaturn = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetSaturn);
-    var planetUranus = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetUranus);
-    var planetNeptune = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetNeptune);
-    var planetPluto = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetPluto);
-    var planetMoon = getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetMoon);
+    var planetMercury = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetMercury);
+    var planetVenus = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetVenus);
+    var planetEarth = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetEarth);
+    var planetMars = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetMars);
+    var planetJupiter = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetJupiter);
+    var planetSaturn = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetSaturn);
+    var planetUranus = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetUranus);
+    var planetNeptune = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetNeptune);
+    var planetPluto = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetPluto);
+    var planetMoon = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetMoon);
 
-    var collabAdidas = getLowestPriceOfAssetByContractAndId(tokenAddressCollabAdidas, tokenIdCollabAdidas);
+    var collabAdidas = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressCollabAdidas, tokenIdCollabAdidas);
 
     var genesisSet = [punksComicOne, foundersDao, mintpassOne, metahero];
     var planetSet = [planetMercury, planetVenus, planetEarth, planetMars, planetJupiter, planetSaturn, planetUranus, planetNeptune, planetPluto, planetMoon];
@@ -350,13 +321,13 @@ async function refreshPrices() {
     metahero.then(function (statsMetahero) {
         var elm = this.document.getElementById('floor-metahero');
 
-        elm.innerHTML = formatEth(statsMetahero.stats.floor_price, true);
+        elm.innerHTML = formatEth(statsMetahero, true);
     });
 
-    getOpenseaStatsBySlug('metaherouniverse').then(function (statsMetaheroCore) {
+    openseaApi.getFloorPriceForCollectionBySlug('metaherouniverse').then(function (statsMetaheroCore) {
         var elm = this.document.getElementById('floor-metahero-core');
 
-        elm.innerHTML = formatEth(statsMetaheroCore.stats.floor_price, true);
+        elm.innerHTML = formatEth(statsMetaheroCore, true);
     });
 
     mintpassOne.then(function (lowestPrice) {
@@ -371,13 +342,13 @@ async function refreshPrices() {
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
-    getLowestPriceOfAssetByContractAndId(tokenAddressPunksComicOneSpecial).then(function (lowestPrice) {
+    openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPunksComicOneSpecial).then(function (lowestPrice) {
         var elm = this.document.getElementById('floor-punks-comic-one-special');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
-    getLowestPriceOfAssetByContractAndId(tokenAddressPunksComicTwo).then(function (lowestPrice) {
+    openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPunksComicTwo).then(function (lowestPrice) {
         var elm = this.document.getElementById('floor-punks-comic-two');
 
         elm.innerHTML = formatEth(lowestPrice, true);
@@ -407,7 +378,7 @@ async function refreshPrices() {
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
-    getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetDarkMoon).then(function (lowestPrice) {
+    openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetDarkMoon).then(function (lowestPrice) {
         var elm = this.document.getElementById('floor-planets-dark-moon');
 
         elm.innerHTML = formatEth(lowestPrice, true);
