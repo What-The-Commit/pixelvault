@@ -95,6 +95,9 @@ const tokenIdCollabAdidas = 0;
 const tokenAddressMetahero = '0x6dc6001535e15b9def7b0f6a20a2111dfa9454e2';
 const tokenAddressMetaheroCore = '0xfb10b1717c92e9cc2d634080c3c337808408d9e1';
 
+const stakingAddressMetahero = '0x6ce31a42058f5496005b39272c21c576941dbfe9';
+const stakingAddressPunksComic = '0xb7bceb36c5f0f8ec1fb67aaeeed2d7252112ea21';
+
 const erc1155Abi = [
     "function totalSupply(uint256 id) public view returns (uint256)",
     "function balanceOf(address account, uint256 id) external view returns (uint256)",
@@ -121,6 +124,20 @@ window.addEventListener('load', async function () {
         updateLastUpdatedFields();
     }, 60*5*1000);
 })
+
+async function getBalanceOfFromContractByOwner(contractAddress, owner) {
+    let contract = new ethers.Contract(contractAddress, erc721Abi, ethersProvider);
+    let balance = ethers.BigNumber.from("1");
+
+    try {
+        balance = await contract.balanceOf(owner);
+    } catch (e) {
+        console.error(e);
+        return balance;
+    }
+
+    return balance;
+}
 
 async function getTotalSupplyByContractAddressAndType(contractAddress, type, tokenId = null) {
     let abi = type === 'ERC721' ? erc721Abi : erc1155Abi;
@@ -219,10 +236,37 @@ async function refreshTotalSupplies() {
         elm.innerHTML = totalSupply.toString();
     });
 
-    getTotalSupplyByContractAddressAndType(tokenAddressMetahero, 'ERC721').then(function (totalSupply) {
+    var metaheroSupply = getTotalSupplyByContractAddressAndType(tokenAddressMetahero, 'ERC721');
+    var metaheroStaked = getBalanceOfFromContractByOwner(tokenAddressMetahero, stakingAddressMetahero);
+
+    metaheroSupply.then(function (totalSupply) {
         var elm = this.document.getElementById('supply-metahero');
 
         elm.innerHTML = totalSupply.toString();
+    });
+
+    Promise.all([metaheroSupply, metaheroStaked]).then(function (values) {
+        var elmAbs = document.getElementById('staking-metahero');
+        var elmPercentage = document.getElementById('staking-metahero-percentage');
+        var supply = values[0].toNumber();
+        var metaheroStaked = values[1].toNumber();
+
+        elmAbs.innerText = metaheroStaked;
+        elmPercentage.innerText = (metaheroStaked / supply * 100).toFixed();
+    });
+
+
+    var punksComicSupply = getTotalSupplyByContractAddressAndType(tokenAddressPunksComicOne, 'ERC721');
+    var punksComicStaked = getBalanceOfFromContractByOwner(tokenAddressPunksComicOne, stakingAddressPunksComic);
+
+    Promise.all([punksComicSupply, punksComicStaked]).then(function (values) {
+        var elmAbs = document.getElementById('staking-punks-comic');
+        var elmPercentage = document.getElementById('staking-punks-comic-percentage');
+        var supply = values[0].toNumber();
+        var punksComicStaked = values[1].toNumber();
+
+        elmAbs.innerText = punksComicStaked;
+        elmPercentage.innerText = (punksComicStaked / supply * 100).toFixed();
     });
 
     getTotalSupplyByContractAddressAndType(tokenAddressMetaheroCore, 'ERC721').then(function (totalSupply) {
