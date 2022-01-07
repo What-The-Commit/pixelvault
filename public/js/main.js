@@ -41,7 +41,7 @@ async function getLowestPriceOfAssetByContractAndId(contract, id = null) {
     let response = await fetch('https://api.opensea.io/api/v1/assets?' + params.toString(), options);
     let data = await response.json();
 
-    return parseFloat(ethers.utils.formatEther(data.assets[0].last_sale.total_price));
+    return parseFloat(ethers.utils.formatEther(data.assets[0].last_sale.total_price)) / parseInt(data.assets[0].last_sale.quantity);
 }
 
 async function fetchPriceInWeth(pool) {
