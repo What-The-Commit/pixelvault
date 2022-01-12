@@ -113,7 +113,14 @@ const erc721Abi = [
 const ethersProvider = new ethers.providers.JsonRpcProvider('https://speedy-nodes-nyc.moralis.io/4bdc28473b549df902238ed0/eth/mainnet');
 const openseaApi = new OpenseaApi(ethers.utils);
 
+const apiHost = 'https://127.0.0.1:1443';
+
 window.addEventListener('load', async function () {
+    await getEthPrices();
+    await createTraitsTable(tokenAddressMetahero);
+
+    loadFloorPricesForTraits(tokenAddressMetahero);
+
     refreshPrices();
     refreshTotalSupplies();
     updateLastUpdatedFields();
@@ -282,25 +289,152 @@ async function refreshTotalSupplies() {
     });
 }
 
-async function refreshPrices() {
+async function getTraitsWithValuesForContract(contractAddress) {
+    let responseTraits = await fetch(apiHost+'/nft/'+contractAddress+'/distinct/traits.type', {method: 'POST'});
+    let responseDataTraits = await responseTraits.json();
+
+    let traitsWithValues = {};
+
+    for (const trait of responseDataTraits) {
+        const body = {
+            "filters": [
+                {
+                    "key": "traits.type",
+                    "value": trait
+                }
+            ]
+        };
+
+        let responseValues = await fetch(apiHost+'/nft/'+contractAddress+'/distinct/traits.value', {method: 'POST', body: JSON.stringify(body), headers: {"Content-Type": "application/json"}});
+        let responseDataValues = await responseValues.json();
+
+        if (!Array.isArray(traitsWithValues[trait])) {
+            traitsWithValues[trait] = [];
+        }
+
+        traitsWithValues[trait].push(...responseDataValues[0].distinctTraits);
+    }
+
+    return traitsWithValues;
+}
+
+async function createTraitsTable(contractAddress) {
+    const traitsWithValues = await getTraitsWithValuesForContract(contractAddress);
+
+    let entries = Object.entries(traitsWithValues);
+    entries.sort((a, b) => a[1].length - b[1].length);
+
+    let tableHeadFromValues = '';
+    let tableBodyFromValues = '';
+
+    for (const traitWithValues of entries) {
+        let trait = traitWithValues[0];
+        let values = traitWithValues[1];
+
+        let align = values.length < 4 ? 'text-align: center;' : 'text-align: left;';
+
+        tableHeadFromValues = '';
+        tableBodyFromValues = '<tr>';
+
+        tableBodyFromValues += `<td style="min-width: 95px;width:95px;">${trait}</td>`;
+
+        for (const value of values) {
+            tableHeadFromValues += `<th style="${align}">${value}</th>`;
+            tableBodyFromValues += `<td style="${align}" id="floor-metahero-${trait.toLowerCase().replace(' ', '-')}-${value.toLowerCase().replace(' ', '-')}"></td>`;
+        }
+
+        tableBodyFromValues += '</tr>';
+
+        const tableTemplate = `
+        <table class="table table-borderless pv-table">
+        <thead style="color: var(--pv-green);">
+        <tr>
+        <th style="color: white; ${align}">Trait</th>
+        ${tableHeadFromValues}
+        </tr>
+        </thead>
+        <tbody>
+        ${tableBodyFromValues}
+        </tbody>
+        </table>
+    `;
+
+        document.getElementById('traits-table').innerHTML = document.getElementById('traits-table').innerHTML + tableTemplate;
+    }
+}
+
+async function getFloorPriceForTraitAndValue(contractAddress, trait, value) {
+    let body = {
+        "filters": [
+            {
+                "key": "traits.type",
+                "value": trait
+            },
+            {
+                "key": "traits.value",
+                "value": value
+            }
+        ]
+    };
+
+    let response = await fetch(apiHost+'/nft/'+contractAddress+'/lowest-price', {method: 'POST', body: JSON.stringify(body), headers: {"Content-Type": "application/json;charset=UTF-8"}});
+    let responseData = await response.json();
+
+    try {
+        return responseData[0].order.price['$numberDecimal'];
+    } catch (error) {
+        return 'N/A';
+    }
+}
+
+async function loadFloorPricesForTraits(contractAddress) {
+    const traitsWithValues = await getTraitsWithValuesForContract(contractAddress);
+
+    let entries = Object.entries(traitsWithValues);
+    entries.sort((a, b) => a[1].length - b[1].length);
+
+    for (const traitWithValues of entries) {
+        let trait = traitWithValues[0];
+        let values = traitWithValues[1];
+
+        for (const value of values) {
+            let floorPriceElementId = `floor-metahero-${trait.toLowerCase().replace(' ', '-')}-${value.toLowerCase().replace(' ', '-')}`;
+
+            let floorPrice = await getFloorPriceForTraitAndValue(contractAddress, trait, value);
+
+            if (floorPrice !== 'N/A') {
+                floorPrice = formatEth(parseFloat(floorPrice), true);
+            }
+
+            document.getElementById(floorPriceElementId).innerHTML = floorPrice;
+        }
+    }
+}
+
+function formatEth(value, withFiat = false) {
+    var formattedValue = value.toFixed(2) + ' Ξ';
+
+    if (withFiat) {
+        formattedValue += ' <span class="fiat-values" style="display: none;">('
+        formattedValue += 'USD: ' + (value * ethPriceInUsd).toFixed(2).toLocaleString();
+        formattedValue += '/';
+        formattedValue += 'EUR: ' + (value * ethPriceInEur).toFixed(2).toLocaleString();
+        formattedValue += ')</span>';
+    }
+
+    return formattedValue;
+}
+
+let ethPriceInUsd;
+let ethPriceInEur;
+
+async function getEthPrices() {
     ethPrices = await getEthPriceInOtherCurrencies();
     ethPriceInUsd = ethPrices.USD;
     ethPriceInEur = ethPrices.EUR;
+}
 
-    var formatEth = function (value, withFiat = false) {
-        var formattedValue = value.toFixed(2) + ' Ξ';
-
-        if (withFiat) {
-            formattedValue += ' <span class="fiat-values" style="display: none;">('
-            formattedValue += 'USD: ' + (value * ethPriceInUsd).toFixed(2).toLocaleString();
-            formattedValue += '/';
-            formattedValue += 'EUR: ' + (value * ethPriceInEur).toFixed(2).toLocaleString();
-            formattedValue += ')</span>';
-        }
-
-        return formattedValue;
-    };
-
+async function refreshPrices() {
     fetchPriceInWeth(powAddress).then(function (powPriceInWeth) {
         var elm = this.document.getElementById('token-price-pow');
         elm.innerHTML = '$' + (powPriceInWeth * ethPriceInUsd).toFixed(2).toLocaleString();

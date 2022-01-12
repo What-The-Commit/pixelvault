@@ -54,3 +54,16 @@ main h2 {
 td .opensea-link {
     float: left;
 }
+
+#traits-table th {
+    vertical-align: top;
+    min-width: 153px;
+}
+
+#traits-table th:first-child {
+    text-align: left !important;
+    min-width: auto;
+}
+#traits-table td {
+    text-align: left;
+}
