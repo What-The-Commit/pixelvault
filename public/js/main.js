@@ -431,9 +431,9 @@ async function loadFloorPricesForTraits(contractAddress) {
         for (const value of values) {
             let floorPriceElementId = `floor-metahero-${trait.toLowerCase().replace(' ', '-')}-${value.toLowerCase().replace(' ', '-')}`;
 
-            let floorPrice = await getFloorPriceForTraitAndValue(contractAddress, trait, value);
-
-            document.getElementById(floorPriceElementId).innerHTML = floorPrice === 0.00 ? 'N/A' : formatEth(floorPrice, true);
+            getFloorPriceForTraitAndValue(contractAddress, trait, value).then(function (floorPrice) {
+                document.getElementById(floorPriceElementId).innerHTML = floorPrice === 0.00 ? 'N/A' : formatEth(floorPrice, true);
+            }).catch(error => console.log(error));
         }
     }
 }
