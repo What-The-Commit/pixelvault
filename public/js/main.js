@@ -363,8 +363,39 @@ async function createTraitsTable(contractAddress) {
     }
 }
 
+async function getFloorPriceForContract(contractAddress) {
+    let response = await fetch(apiHost+'/nft/'+contractAddress+'/lowest-price', {method: 'POST', headers: {"Content-Type": "application/json;charset=UTF-8"}});
+    let responseData = await response.json();
+
+    try {
+        return parseFloat(responseData[0].order.price['$numberDecimal']);
+    } catch (error) {
+        return 0.00;
+    }
+}
+
+async function getFloorPriceForContractAndTokenId(contractAddress, tokenId) {
+    const body = {
+        "filters": [
+            {
+                "key": "tokenId",
+                "value": tokenId
+            }
+        ]
+    };
+
+    let response = await fetch(apiHost+'/nft/'+contractAddress+'/lowest-price', {method: 'POST', body: JSON.stringify(body), headers: {"Content-Type": "application/json;charset=UTF-8"}});
+    let responseData = await response.json();
+
+    try {
+        return parseFloat(responseData[0].order.price['$numberDecimal']);
+    } catch (error) {
+        return 0.00;
+    }
+}
+
 async function getFloorPriceForTraitAndValue(contractAddress, trait, value) {
-    let body = {
+    const body = {
         "filters": [
             {
                 "key": "traits.type",
@@ -381,9 +412,9 @@ async function getFloorPriceForTraitAndValue(contractAddress, trait, value) {
     let responseData = await response.json();
 
     try {
-        return responseData[0].order.price['$numberDecimal'];
+        return parseFloat(responseData[0].order.price['$numberDecimal']);
     } catch (error) {
-        return 'N/A';
+        return 0.00;
     }
 }
 
@@ -402,17 +433,17 @@ async function loadFloorPricesForTraits(contractAddress) {
 
             let floorPrice = await getFloorPriceForTraitAndValue(contractAddress, trait, value);
 
-            if (floorPrice !== 'N/A') {
-                floorPrice = formatEth(parseFloat(floorPrice), true);
-            }
-
-            document.getElementById(floorPriceElementId).innerHTML = floorPrice;
+            document.getElementById(floorPriceElementId).innerHTML = floorPrice === 0.00 ? 'N/A' : formatEth(floorPrice, true);
         }
     }
 }
 
 function formatEth(value, withFiat = false) {
-    var formattedValue = value.toFixed(2) + ' Ξ';
+    if (value <= 0) {
+        return 'N/A';
+    }
+
+    let formattedValue = value.toFixed(2) + ' Ξ';
 
     if (withFiat) {
         formattedValue += ' <span class="fiat-values" style="display: none;">('
@@ -446,166 +477,161 @@ async function refreshPrices() {
         elm.innerHTML = '$' + (punksPriceInWeth * ethPriceInUsd).toFixed(2).toLocaleString();
     });
 
-    var punksComicOne = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPunksComicOne);
-    var foundersDao = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressFoundersDao);
-    var mintpassOne = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressMintpass, tokenIdMintpassOne);
-    var metahero = openseaApi.getFloorPriceForCollectionBySlug('metahero-generative');
+    var punksComicOne = getFloorPriceForContract(tokenAddressPunksComicOne);
+    var foundersDao = getFloorPriceForContract(tokenAddressFoundersDao);
+    var mintpassOne = getFloorPriceForContractAndTokenId(tokenAddressMintpass, tokenIdMintpassOne);
+    var metahero = getFloorPriceForContract(tokenAddressMetahero);
 
-    var planetMercury = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetMercury);
-    var planetVenus = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetVenus);
-    var planetEarth = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetEarth);
-    var planetMars = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetMars);
-    var planetJupiter = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetJupiter);
-    var planetSaturn = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetSaturn);
-    var planetUranus = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetUranus);
-    var planetNeptune = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetNeptune);
-    var planetPluto = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetPluto);
-    var planetMoon = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetMoon);
+    var planetMercury = getFloorPriceForContractAndTokenId(tokenAddressPlanets, tokenIdPlanetMercury);
+    var planetVenus = getFloorPriceForContractAndTokenId(tokenAddressPlanets, tokenIdPlanetVenus);
+    var planetEarth = getFloorPriceForContractAndTokenId(tokenAddressPlanets, tokenIdPlanetEarth);
+    var planetMars = getFloorPriceForContractAndTokenId(tokenAddressPlanets, tokenIdPlanetMars);
+    var planetJupiter = getFloorPriceForContractAndTokenId(tokenAddressPlanets, tokenIdPlanetJupiter);
+    var planetSaturn = getFloorPriceForContractAndTokenId(tokenAddressPlanets, tokenIdPlanetSaturn);
+    var planetUranus = getFloorPriceForContractAndTokenId(tokenAddressPlanets, tokenIdPlanetUranus);
+    var planetNeptune = getFloorPriceForContractAndTokenId(tokenAddressPlanets, tokenIdPlanetNeptune);
+    var planetPluto = getFloorPriceForContractAndTokenId(tokenAddressPlanets, tokenIdPlanetPluto);
+    var planetMoon = getFloorPriceForContractAndTokenId(tokenAddressPlanets, tokenIdPlanetMoon);
 
-    var collabAdidas = openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressCollabAdidas, tokenIdCollabAdidas);
+    var collabAdidas = getFloorPriceForContractAndTokenId(tokenAddressCollabAdidas, tokenIdCollabAdidas);
 
     var genesisSet = [punksComicOne, foundersDao, mintpassOne, metahero];
     var planetSet = [planetMercury, planetVenus, planetEarth, planetMars, planetJupiter, planetSaturn, planetUranus, planetNeptune, planetPluto, planetMoon];
 
     Promise.all(genesisSet).then(function (values) {
-        var setValue = 0.00;
+        let setValue = 0.00;
 
-        for (value of values) {
-            if (typeof value === 'object') {
-                setValue += value.stats.floor_price;
-                continue;
-            }
-
+        for (const value of values) {
             setValue += value;
         }
 
-        var elm = this.document.getElementById('floor-set-genesis');
+        let elm = this.document.getElementById('floor-set-genesis');
 
         elm.innerHTML = formatEth(setValue, true);
     });
 
     Promise.all(planetSet).then(function (values) {
-        var setValue = 0.00;
+        let setValue = 0.00;
 
-        for (value of values) {
+        for (const value of values) {
             setValue += value;
         }
 
-        var elm = this.document.getElementById('floor-set-planets');
+        let elm = this.document.getElementById('floor-set-planets');
 
         elm.innerHTML = formatEth(setValue, true);
     });
 
     metahero.then(function (statsMetahero) {
-        var elm = this.document.getElementById('floor-metahero');
+        let elm = this.document.getElementById('floor-metahero');
 
         elm.innerHTML = formatEth(statsMetahero, true);
     });
 
-    openseaApi.getFloorPriceForCollectionBySlug('metaherouniverse').then(function (statsMetaheroCore) {
-        var elm = this.document.getElementById('floor-metahero-core');
+    getFloorPriceForContract(tokenAddressMetaheroCore).then(function (statsMetaheroCore) {
+        let elm = this.document.getElementById('floor-metahero-core');
 
         elm.innerHTML = formatEth(statsMetaheroCore, true);
     });
 
     mintpassOne.then(function (lowestPrice) {
-        var elm = this.document.getElementById('floor-metahero-mintpass-one');
+        let elm = this.document.getElementById('floor-metahero-mintpass-one');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
     punksComicOne.then(function (lowestPrice) {
-        var elm = this.document.getElementById('floor-punks-comic-one');
+        let elm = this.document.getElementById('floor-punks-comic-one');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
-    openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPunksComicOneSpecial).then(function (lowestPrice) {
-        var elm = this.document.getElementById('floor-punks-comic-one-special');
+    getFloorPriceForContract(tokenAddressPunksComicOneSpecial).then(function (lowestPrice) {
+        let elm = this.document.getElementById('floor-punks-comic-one-special');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
-    openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPunksComicTwo).then(function (lowestPrice) {
-        var elm = this.document.getElementById('floor-punks-comic-two');
+    getFloorPriceForContract(tokenAddressPunksComicTwo).then(function (lowestPrice) {
+        let elm = this.document.getElementById('floor-punks-comic-two');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
     foundersDao.then(function (lowestPrice) {
-        var elm = this.document.getElementById('floor-founders-dao');
+        let elm = this.document.getElementById('floor-founders-dao');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
     planetMercury.then(function (lowestPrice) {
-        var elm = this.document.getElementById('floor-planets-mercury');
+        let elm = this.document.getElementById('floor-planets-mercury');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
     planetVenus.then(function (lowestPrice) {
-        var elm = this.document.getElementById('floor-planets-venus');
+        let elm = this.document.getElementById('floor-planets-venus');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
     planetEarth.then(function (lowestPrice) {
-        var elm = this.document.getElementById('floor-planets-earth');
+        let elm = this.document.getElementById('floor-planets-earth');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
-    openseaApi.getLowestPriceOfAssetByContractAndId(tokenAddressPlanets, tokenIdPlanetDarkMoon).then(function (lowestPrice) {
-        var elm = this.document.getElementById('floor-planets-dark-moon');
+    getFloorPriceForContractAndTokenId(tokenAddressPlanets, tokenIdPlanetDarkMoon).then(function (lowestPrice) {
+        let elm = this.document.getElementById('floor-planets-dark-moon');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
     planetMars.then(function (lowestPrice) {
-        var elm = this.document.getElementById('floor-planets-mars');
+        let elm = this.document.getElementById('floor-planets-mars');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
     planetJupiter.then(function (lowestPrice) {
-        var elm = this.document.getElementById('floor-planets-jupiter');
+        let elm = this.document.getElementById('floor-planets-jupiter');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
     planetSaturn.then(function (lowestPrice) {
-        var elm = this.document.getElementById('floor-planets-saturn');
+        let elm = this.document.getElementById('floor-planets-saturn');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
     planetUranus.then(function (lowestPrice) {
-        var elm = this.document.getElementById('floor-planets-uranus');
+        let elm = this.document.getElementById('floor-planets-uranus');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
     planetNeptune.then(function (lowestPrice) {
-        var elm = this.document.getElementById('floor-planets-neptune');
+        let elm = this.document.getElementById('floor-planets-neptune');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
     planetPluto.then(function (lowestPrice) {
-        var elm = this.document.getElementById('floor-planets-pluto');
+        let elm = this.document.getElementById('floor-planets-pluto');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
     planetMoon.then(function (lowestPrice) {
-        var elm = this.document.getElementById('floor-planets-moon');
+        let elm = this.document.getElementById('floor-planets-moon');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
 
     collabAdidas.then(function (lowestPrice) {
-        var elm = this.document.getElementById('floor-collab-adidas');
+        let elm = this.document.getElementById('floor-collab-adidas');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
