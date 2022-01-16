@@ -53,9 +53,9 @@ function toggleFiat(button) {
         button.innerHTML = 'Show FIAT prices';
     }
 
-    var elms = document.getElementsByClassName("fiat-values");
+    let elms = document.getElementsByClassName("fiat-values");
 
-    for (elm of elms) {
+    for (const elm of elms) {
         if (elm.style.display === "none") {
             elm.style.display = "inline-block";
         } else {
@@ -113,7 +113,7 @@ const erc721Abi = [
 const ethersProvider = new ethers.providers.JsonRpcProvider('https://speedy-nodes-nyc.moralis.io/4bdc28473b549df902238ed0/eth/mainnet');
 const openseaApi = new OpenseaApi(ethers.utils);
 
-const apiHost = 'https://127.0.0.1:1443';
+const apiHost = 'https://api.what-the-commit.com';
 
 window.addEventListener('load', async function () {
     await getEthPrices();
@@ -147,18 +147,27 @@ async function getBalanceOfFromContractByOwner(contractAddress, owner) {
 }
 
 async function getTotalSupplyByContractAddressAndType(contractAddress, type, tokenId = null) {
-    let abi = type === 'ERC721' ? erc721Abi : erc1155Abi;
-    let contract = new ethers.Contract(contractAddress, abi, ethersProvider);
-    let totalSupply = ethers.BigNumber.from("0");
+    const body = {
+        "type": type
+    };
 
-    try {
-        totalSupply = type === 'ERC721' ? await contract.totalSupply() : await contract.totalSupply(tokenId);
-    } catch (e) {
-        console.error(e);
-        return totalSupply;
+    if (tokenId !== null) {
+        body['filters'] = [
+            {
+                "key": "tokenId",
+                "value": tokenId
+            }
+        ];
     }
 
-    return totalSupply;
+    let response = await fetch(apiHost+'/nft/'+contractAddress+'/total-supply', {method: 'POST', body: JSON.stringify(body), headers: {"Content-Type": "application/json;charset=UTF-8"}});
+    let responseData = await response.json();
+
+    try {
+        return parseInt(responseData);
+    } catch (error) {
+        return 0;
+    }
 }
 
 async function updateLastUpdatedFields() {
@@ -172,73 +181,73 @@ async function updateLastUpdatedFields() {
 
 async function refreshTotalSupplies() {
     getTotalSupplyByContractAddressAndType(tokenAddressMintpass, 'ERC1155', tokenIdMintpassOne).then(function (totalSupply) {
-        var elm = this.document.getElementById('supply-mintpass-one');
+        let elm = this.document.getElementById('supply-mintpass-one');
 
         elm.innerHTML = totalSupply.toString();
     });
 
     getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetMercury).then(function (totalSupply) {
-        var elm = this.document.getElementById('supply-planet-mercury');
+        let elm = this.document.getElementById('supply-planet-mercury');
 
         elm.innerHTML = totalSupply.toString();
     });
 
     getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetVenus).then(function (totalSupply) {
-        var elm = this.document.getElementById('supply-planet-venus');
+        let elm = this.document.getElementById('supply-planet-venus');
 
         elm.innerHTML = totalSupply.toString();
     });
 
     getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetEarth).then(function (totalSupply) {
-        var elm = this.document.getElementById('supply-planet-earth');
+        let elm = this.document.getElementById('supply-planet-earth');
 
         elm.innerHTML = totalSupply.toString();
     });
 
     getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetDarkMoon).then(function (totalSupply) {
-        var elm = this.document.getElementById('supply-planet-dark-moon');
+        let elm = this.document.getElementById('supply-planet-dark-moon');
 
         elm.innerHTML = totalSupply.toString();
     });
 
     getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetMars).then(function (totalSupply) {
-        var elm = this.document.getElementById('supply-planet-mars');
+        let elm = this.document.getElementById('supply-planet-mars');
 
         elm.innerHTML = totalSupply.toString();
     });
 
     getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetJupiter).then(function (totalSupply) {
-        var elm = this.document.getElementById('supply-planet-jupiter');
+        let elm = this.document.getElementById('supply-planet-jupiter');
 
         elm.innerHTML = totalSupply.toString();
     });
 
     getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetSaturn).then(function (totalSupply) {
-        var elm = this.document.getElementById('supply-planet-saturn');
+        let elm = this.document.getElementById('supply-planet-saturn');
 
         elm.innerHTML = totalSupply.toString();
     });
 
     getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetUranus).then(function (totalSupply) {
-        var elm = this.document.getElementById('supply-planet-uranus');
+        let elm = this.document.getElementById('supply-planet-uranus');
 
         elm.innerHTML = totalSupply.toString();
     });
 
     getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetNeptune).then(function (totalSupply) {
-        var elm = this.document.getElementById('supply-planet-neptune');
+        let elm = this.document.getElementById('supply-planet-neptune');
 
         elm.innerHTML = totalSupply.toString();
     });
 
     getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetPluto).then(function (totalSupply) {
-        var elm = this.document.getElementById('supply-planet-pluto');
+        let elm = this.document.getElementById('supply-planet-pluto');
 
         elm.innerHTML = totalSupply.toString();
     });
 
     getTotalSupplyByContractAddressAndType(tokenAddressPlanets, 'ERC1155', tokenIdPlanetMoon).then(function (totalSupply) {
-        var elm = this.document.getElementById('supply-planet-moon');
+        let elm = this.document.getElementById('supply-planet-moon');
 
         elm.innerHTML = totalSupply.toString();
     });
@@ -247,14 +256,14 @@ async function refreshTotalSupplies() {
     var metaheroStaked = getBalanceOfFromContractByOwner(tokenAddressMetahero, stakingAddressMetahero);
 
     metaheroSupply.then(function (totalSupply) {
-        var elm = this.document.getElementById('supply-metahero');
+        let elm = this.document.getElementById('supply-metahero');
 
         elm.innerHTML = totalSupply.toString();
     });
 
     Promise.all([metaheroSupply, metaheroStaked]).then(function (values) {
-        var elmAbs = document.getElementById('staking-metahero');
-        var elmPercentage = document.getElementById('staking-metahero-percentage');
+        let elmAbs = document.getElementById('staking-metahero');
+        let elmPercentage = document.getElementById('staking-metahero-percentage');
         var supply = values[0].toNumber();
         var metaheroStaked = values[1].toNumber();
 
@@ -267,8 +276,8 @@ async function refreshTotalSupplies() {
     var punksComicStaked = getBalanceOfFromContractByOwner(tokenAddressPunksComicOne, stakingAddressPunksComic);
 
     Promise.all([punksComicSupply, punksComicStaked]).then(function (values) {
-        var elmAbs = document.getElementById('staking-punks-comic');
-        var elmPercentage = document.getElementById('staking-punks-comic-percentage');
+        let elmAbs = document.getElementById('staking-punks-comic');
+        let elmPercentage = document.getElementById('staking-punks-comic-percentage');
         var supply = values[0].toNumber();
         var punksComicStaked = values[1].toNumber();
 
@@ -277,13 +286,13 @@ async function refreshTotalSupplies() {
     });
 
     getTotalSupplyByContractAddressAndType(tokenAddressMetaheroCore, 'ERC721').then(function (totalSupply) {
-        var elm = this.document.getElementById('supply-metahero-core');
+        let elm = this.document.getElementById('supply-metahero-core');
 
         elm.innerHTML = totalSupply.toString();
     });
 
     getTotalSupplyByContractAddressAndType(tokenAddressCollabAdidas, 'ERC1155', tokenIdCollabAdidas).then(function (totalSupply) {
-        var elm = this.document.getElementById('supply-collab-adidas');
+        let elm = this.document.getElementById('supply-collab-adidas');
 
         elm.innerHTML = totalSupply.toString();
     });
@@ -467,13 +476,13 @@ async function getEthPrices() {
 
 async function refreshPrices() {
     fetchPriceInWeth(powAddress).then(function (powPriceInWeth) {
-        var elm = this.document.getElementById('token-price-pow');
+        let elm = this.document.getElementById('token-price-pow');
         elm.innerHTML = '$' + (powPriceInWeth * ethPriceInUsd).toFixed(2).toLocaleString();
     });
 
 
     fetchPriceInWeth(punksAddress).then(function (punksPriceInWeth) {
-        var elm = this.document.getElementById('token-price-punks');
+        let elm = this.document.getElementById('token-price-punks');
         elm.innerHTML = '$' + (punksPriceInWeth * ethPriceInUsd).toFixed(2).toLocaleString();
     });
 
