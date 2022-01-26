@@ -272,7 +272,7 @@ async function refreshTotalSupplies() {
     Promise.all([metaheroSupply, metaheroStaked]).then(function (values) {
         let elmAbs = document.getElementById('staking-metahero');
         let elmPercentage = document.getElementById('staking-metahero-percentage');
-        var supply = values[0].toNumber();
+        var supply = parseInt(values[0]);
         var metaheroStaked = values[1].toNumber();
 
         elmAbs.innerText = metaheroStaked;
@@ -286,7 +286,7 @@ async function refreshTotalSupplies() {
     Promise.all([punksComicSupply, punksComicStaked]).then(function (values) {
         let elmAbs = document.getElementById('staking-punks-comic');
         let elmPercentage = document.getElementById('staking-punks-comic-percentage');
-        var supply = values[0].toNumber();
+        var supply = parseInt(values[0]);
         var punksComicStaked = values[1].toNumber();
 
         elmAbs.innerText = punksComicStaked;
