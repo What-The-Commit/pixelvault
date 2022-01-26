@@ -85,6 +85,8 @@ const tokenAddressFoundersDao = '0xd0a07a76746707f6d6d36d9d5897b14a8e9ed493';
 const tokenAddressPunksComicOne = '0x5ab21ec0bfa0b29545230395e3adaca7d552c948';
 const tokenAddressPunksComicOneSpecial = '0xa9c0a07a7cb84ad1f2ffab06de3e55aab7d523e8';
 const tokenAddressPunksComicTwo = '0x128675d4fddbc4a0d3f8aa777d8ee0fb8b427c2f';
+const tokenAddressPunksComicTwoEliteApeCoins = '0xd0b53410454370a482979c0adaf3667c6308a801';
+const tokenIdPunksComicTwoEliteApeCoins = 0;
 
 const powAddress = '0xc0793782d11dd9bf7b3a7a5a74614f1debe1da2e';
 const punksAddress = '0xa80ccc104349d2ee29998c54d6e6488012f8afe0';
@@ -182,6 +184,12 @@ async function updateLastUpdatedFields() {
 async function refreshTotalSupplies() {
     getTotalSupplyByContractAddressAndType(tokenAddressMintpass, 'ERC1155', tokenIdMintpassOne).then(function (totalSupply) {
         let elm = this.document.getElementById('supply-mintpass-one');
+
+        elm.innerHTML = totalSupply.toString();
+    });
+
+    getTotalSupplyByContractAddressAndType(tokenAddressPunksComicTwoEliteApeCoins, 'ERC1155', tokenIdPunksComicTwoEliteApeCoins).then(function (totalSupply) {
+        let elm = this.document.getElementById('supply-punks-comic-two-elite-ape-entry-coins');
 
         elm.innerHTML = totalSupply.toString();
     });
@@ -563,6 +571,12 @@ async function refreshPrices() {
 
     getFloorPriceForContract(tokenAddressPunksComicTwo).then(function (lowestPrice) {
         let elm = this.document.getElementById('floor-punks-comic-two');
+
+        elm.innerHTML = formatEth(lowestPrice, true);
+    });
+
+    getFloorPriceForContractAndTokenId(tokenAddressPunksComicTwoEliteApeCoins, tokenIdPunksComicTwoEliteApeCoins).then(function (lowestPrice) {
+        let elm = this.document.getElementById('floor-punks-comic-two-elite-ape-entry-coins');
 
         elm.innerHTML = formatEth(lowestPrice, true);
     });
