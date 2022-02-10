@@ -88,6 +88,15 @@ const tokenAddressPunksComicTwo = '0x128675d4fddbc4a0d3f8aa777d8ee0fb8b427c2f';
 const tokenAddressPunksComicTwoEliteApeCoins = '0xd0b53410454370a482979c0adaf3667c6308a801';
 const tokenIdPunksComicTwoEliteApeCoins = 0;
 
+const tokenAddressEliteApeBiz = '0x15d164340c1548fa74fa1b98c24a3ea24fefb177';
+const tokenAddressEliteApeKingBlackBored = '0xb8e4b186256085ed360278cb86afc968f06a7ec3';
+const tokenAddressEliteApeBba = '0xa173846434d21c1a0eb7740d47f629da89436af5';
+const tokenAddressEliteApeTropo = '0x67e341b0b06f9a805896737a73ef55f2226692e3';
+const tokenAddressEliteApeKiki = '0x37f02e4fa5f28a25baf64566083c717c387761d0';
+const tokenAddressEliteApeGoldRilla = '0xce29001d6748c531b420163b88ff58ed326d7337';
+const tokenAddressEliteApeHanzo = '0xa379cec69303e3ec0fea64d9298f126658276f63';
+const tokenAddressEliteApeLoneStar = '0x2f2e1edf30bf7bfa8ba13c8c16bf3347f0e238ff';
+
 const powAddress = '0xc0793782d11dd9bf7b3a7a5a74614f1debe1da2e';
 const punksAddress = '0xa80ccc104349d2ee29998c54d6e6488012f8afe0';
 
@@ -488,7 +497,6 @@ async function refreshPrices() {
         elm.innerHTML = '$' + (powPriceInWeth * ethPriceInUsd).toFixed(2).toLocaleString();
     });
 
-
     fetchPriceInWeth(punksAddress).then(function (punksPriceInWeth) {
         let elm = this.document.getElementById('token-price-punks');
         elm.innerHTML = '$' + (punksPriceInWeth * ethPriceInUsd).toFixed(2).toLocaleString();
@@ -579,6 +587,54 @@ async function refreshPrices() {
         let elm = this.document.getElementById('floor-punks-comic-two-elite-ape-entry-coins');
 
         elm.innerHTML = formatEth(lowestPrice, true);
+    });
+
+    getFloorPriceForContract(tokenAddressEliteApeBiz).then(function (statsEliteApe) {
+        let elm = this.document.getElementById('floor-eliteape-biz');
+
+        elm.innerHTML = formatEth(statsEliteApe, true);
+    });
+
+    getFloorPriceForContract(tokenAddressEliteApeKingBlackBored).then(function (statsEliteApe) {
+        let elm = this.document.getElementById('floor-eliteape-king-black-bored');
+
+        elm.innerHTML = formatEth(statsEliteApe, true);
+    });
+
+    getFloorPriceForContract(tokenAddressEliteApeBba).then(function (statsEliteApe) {
+        let elm = this.document.getElementById('floor-eliteape-bba');
+
+        elm.innerHTML = formatEth(statsEliteApe, true);
+    });
+
+    getFloorPriceForContract(tokenAddressEliteApeTropo).then(function (statsEliteApe) {
+        let elm = this.document.getElementById('floor-eliteape-tropo');
+
+        elm.innerHTML = formatEth(statsEliteApe, true);
+    });
+
+    getFloorPriceForContract(tokenAddressEliteApeKiki).then(function (statsEliteApe) {
+        let elm = this.document.getElementById('floor-eliteape-kiki');
+
+        elm.innerHTML = formatEth(statsEliteApe, true);
+    });
+
+    getFloorPriceForContract(tokenAddressEliteApeGoldRilla).then(function (statsEliteApe) {
+        let elm = this.document.getElementById('floor-eliteape-gold-rilla');
+
+        elm.innerHTML = formatEth(statsEliteApe, true);
+    });
+
+    getFloorPriceForContract(tokenAddressEliteApeHanzo).then(function (statsEliteApe) {
+        let elm = this.document.getElementById('floor-eliteape-hanzo');
+
+        elm.innerHTML = formatEth(statsEliteApe, true);
+    });
+
+    getFloorPriceForContract(tokenAddressEliteApeLoneStar).then(function (statsEliteApe) {
+        let elm = this.document.getElementById('floor-eliteape-lone-star');
+
+        elm.innerHTML = formatEth(statsEliteApe, true);
     });
 
     foundersDao.then(function (lowestPrice) {
