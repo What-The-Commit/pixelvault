@@ -122,7 +122,6 @@ const erc721Abi = [
 ];
 
 const ethersProvider = new ethers.providers.JsonRpcProvider('https://speedy-nodes-nyc.moralis.io/4bdc28473b549df902238ed0/eth/mainnet');
-const openseaApi = new OpenseaApi(ethers.utils);
 
 const apiHost = 'https://api.what-the-commit.com';
 
@@ -136,11 +135,11 @@ window.addEventListener('load', async function () {
     refreshTotalSupplies();
     updateLastUpdatedFields();
 
-    setInterval(function () {
+    /*setInterval(function () {
         refreshPrices();
         refreshTotalSupplies();
         updateLastUpdatedFields();
-    }, 60*5*1000);
+    }, 60*5*1000);*/
 })
 
 async function getBalanceOfFromContractByOwner(contractAddress, owner) {
